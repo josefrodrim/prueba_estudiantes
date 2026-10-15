@@ -1,0 +1,19 @@
+__pycache__/
+*.pyc
+*.egg-info/
+.venv/
+.env
+.pytest_cache/
+.ipynb_checkpoints/
+mlruns/
+.DS_Store
+
+# Datos y artefactos (no se versionan)
+data/raw/*
+data/interim/*
+data/processed/*
+models/*
+reports/*
+!reports/figures/
+reports/figures/*
+!**/.gitkeep

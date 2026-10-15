@@ -1,0 +1,64 @@
+# Configuración central del proyecto de churn (fuga de clientes)
+project:
+  name: telco-churn
+  random_state: 42
+
+data:
+  url: https://raw.githubusercontent.com/IBM/telco-customer-churn-on-icp4d/master/data/Telco-Customer-Churn.csv
+  raw_path: data/raw/telco_churn.csv
+  processed_path: data/processed/telco_churn_clean.parquet
+  target: Churn
+  id_column: customerID
+  test_size: 0.2
+
+features:
+  numeric:
+    - tenure
+    - MonthlyCharges
+    - TotalCharges
+  categorical:
+    - gender
+    - SeniorCitizen
+    - Partner
+    - Dependents
+    - PhoneService
+    - MultipleLines
+    - InternetService
+    - OnlineSecurity
+    - OnlineBackup
+    - DeviceProtection
+    - TechSupport
+    - StreamingTV
+    - StreamingMovies
+    - Contract
+    - PaperlessBilling
+    - PaymentMethod
+  engineered:
+    - avg_charge_per_month
+    - num_services
+    - is_long_contract
+
+model:
+  # Modelos candidatos: se entrenan todos y se elige el mejor por CV
+  candidates:
+    logistic_regression:
+      C: 1.0
+      max_iter: 1000
+      class_weight: balanced
+    random_forest:
+      n_estimators: 300
+      max_depth: 8
+      class_weight: balanced
+    xgboost:
+      n_estimators: 400
+      max_depth: 4
+      learning_rate: 0.05
+      subsample: 0.8
+  cv_folds: 5
+  scoring: roc_auc
+  threshold: 0.5
+
+artifacts:
+  model_path: models/churn_model.joblib
+  metrics_path: reports/metrics.json
+  figures_dir: reports/figures
